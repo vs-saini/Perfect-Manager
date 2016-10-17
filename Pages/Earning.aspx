@@ -9,9 +9,7 @@
         <AjaxSettings>
             <telerik:AjaxSetting AjaxControlID="RadComboBoxOptions">
                 <UpdatedControls>
-                    <telerik:AjaxUpdatedControl ControlID="RadGridExpenses" />
                     <telerik:AjaxUpdatedControl ControlID="RadGridEarning" />
-                    <telerik:AjaxUpdatedControl ControlID="RadChartExpenses" />
                     <telerik:AjaxUpdatedControl ControlID="RadChartEarning" />
                     <telerik:AjaxUpdatedControl ControlID="rcbYears" />
                 </UpdatedControls>
@@ -19,6 +17,7 @@
             <telerik:AjaxSetting AjaxControlID="rcbYears">
                 <UpdatedControls>
                     <telerik:AjaxUpdatedControl ControlID="RadChartEarning" LoadingPanelID="RadAjaxLoadingPanel1" />
+                     <telerik:AjaxUpdatedControl ControlID="RadGridEarning" LoadingPanelID="RadAjaxLoadingPanel1" />
                 </UpdatedControls>
             </telerik:AjaxSetting>
             <telerik:AjaxSetting AjaxControlID="rcbReport">
@@ -48,7 +47,8 @@
                 <telerik:RadComboBox ID="rcbYears" runat="server" AutoPostBack="true" Width="100px"
                     Skin="Office2010Silver" OnSelectedIndexChanged="RcbYears_SelectedIndexChanged">
                     <Items>
-					    <telerik:RadComboBoxItem Text="2015" Value="2015" Selected="true"/>
+                        <telerik:RadComboBoxItem Text="2016" Value="2016" Selected="true"/>
+                        <telerik:RadComboBoxItem Text="2015" Value="2015"/>
                         <telerik:RadComboBoxItem Text="2014" Value="2014" />
                         <telerik:RadComboBoxItem Text="2013" Value="2013" />
                         <telerik:RadComboBoxItem Text="2012" Value="2012" />
@@ -130,15 +130,15 @@
                 <telerik:GridBoundColumn DataField="Source" HeaderText="Earning Source" />
                 <telerik:GridBoundColumn DataField="Client" HeaderText="From Client" />
                 <telerik:GridBoundColumn DataField="Salary_USD" HeaderText="Salary (USD)" DataFormatString="${0:#.00}" />
-                <telerik:GridBoundColumn DataField="Amount" HeaderText="Salary (INR)" DataFormatString="{0:C2}" />
-                <telerik:GridBoundColumn DataField="ER" HeaderText="ER (INR/USD)" DataFormatString="{0:C2}" />
+                <telerik:GridBoundColumn DataField="Amount" HeaderText="Salary (INR)"/>
+                <telerik:GridBoundColumn DataField="ER" HeaderText="ER (INR/USD)"/>
                 <telerik:GridDateTimeColumn DataField="OnDate" HeaderText="On Date" DataFormatString="{0:dd MMMM yyyy}" />
                 <telerik:GridBoundColumn DataField="Remarks" HeaderText="Remarks" />
             </Columns>
         </MasterTableView>
     </telerik:RadGrid>
     <asp:SqlDataSource ID="sdsEarningData" runat="server" ConnectionString="<%$ ConnectionStrings:sdfConString %>"
-        ProviderName="<%$ ConnectionStrings:sdfConString.ProviderName %>" SelectCommand="SELECT * FROM Earning ORDER BY OnDate DESC" />
+        ProviderName="<%$ ConnectionStrings:sdfConString.ProviderName %>" />
 
     <%--RADNOTIFICATION--%>
     <!--AutoCloseDelay is in milli-seconds-->

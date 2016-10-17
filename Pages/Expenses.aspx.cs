@@ -28,21 +28,18 @@ namespace Pages
             var qb = new StringBuilder("SELECT SUM(Amount) FROM Expenses WHERE DATEPART(yy, OnDate) = ");
             qb.Append(rcbYears.SelectedValue);
 
-            if(!_includeParentCategory)
+            if (!_includeParentCategory)
                 qb.Append(" AND Category <> 'Parents'");
-
-            if (!_includeInvestCategory)
-            qb.Append(" AND Category <> 'Investment'");
 
             _queryForYear = qb.ToString();
 
             qb.Append(" AND DATEPART(mm, OnDate) = ").Append(rcbMonths.SelectedValue);
             _queryForMonth = qb.ToString();
-            
+
         }
 
         protected void Page_Load(object sender, EventArgs e)
-        {		
+        {
             RadToolTipManager1.ToolTipZoneID = RadChartExpenses.ClientID;
             if (IsPostBack) return;
             ExpensesMonthWise();
@@ -97,6 +94,9 @@ namespace Pages
 
         private void ExpensesMonthWise()
         {
+            sdsExpenseData.SelectCommand = string.Format("SELECT * FROM Expenses WHERE DATEPART(yy, OnDate) = {0} ORDER BY OnDate DESC",
+               rcbYears.SelectedValue);
+
             var qb = new StringBuilder("SELECT SUM(Amount) AS spentOn, MAX(E.OnDate) as onDate, E.Category FROM Expenses AS E WHERE DATEPART(yy, E.OnDate) = ");
             qb.Append(rcbYears.SelectedValue);
             qb.Append(" AND DATEPART(mm, E.OnDate) = ").Append(rcbMonths.SelectedValue);
@@ -104,25 +104,35 @@ namespace Pages
             if (!_includeParentCategory)
                 qb.Append(" AND Category <> 'Parents'");
 
-            if (!_includeInvestCategory)
-                qb.Append(" AND Category <> 'Investment'");
-
             qb.Append(" GROUP BY E.Category");
 
             sdsExpenseChartData.SelectCommand = qb.ToString();
 
-            
             RadChartExpenses.DataBind();
+
+            double monthlyInvestment = 0, yearlyInvestment = 0;
+            if (_includeInvestCategory)
+            {
+                var invQb = new StringBuilder("SELECT SUM(Amount) FROM MutualFunds AS M WHERE DATEPART(yy, M.Date) = ");
+                invQb.Append(rcbYears.SelectedValue);
+
+                var invQbYearly = invQb.ToString();
+
+                invQb.Append(" AND DATEPART(mm, M.Date) = ").Append(rcbMonths.SelectedValue);
+
+                monthlyInvestment = Utility.TotalAmount(invQb.ToString());
+                yearlyInvestment = Utility.TotalAmount(invQbYearly);
+            }
 
             var builder = new StringBuilder("Expenses in ");
             builder.Append(rcbMonths.SelectedItem.Text);
             builder.Append(" ");
             builder.Append(rcbYears.SelectedValue);
             builder.Append(": ");
-            builder.Append(Utility.AmountToString(Utility.TotalAmount(_queryForMonth)));
+            builder.Append(Utility.AmountToString(Utility.TotalAmount(_queryForMonth) + monthlyInvestment));
 
             // Also show total expenses for current year
-            builder.Append(" (").Append("Total: ").Append(Utility.AmountToString(Utility.TotalAmount(_queryForYear))).Append(")");
+            builder.Append(" (").Append("Total: ").Append(Utility.AmountToString(Utility.TotalAmount(_queryForYear) + yearlyInvestment)).Append(")");
 
             RadChartExpenses.ChartTitle.TextBlock.Text = builder.ToString();
             Utility.SetSeriesColor(RadChartExpenses, "Category");
@@ -130,6 +140,9 @@ namespace Pages
 
         private void ExpensesYearWise()
         {
+            sdsExpenseData.SelectCommand = string.Format("SELECT * FROM Expenses WHERE DATEPART(yy, OnDate) = {0} ORDER BY OnDate DESC",
+               rcbYears.SelectedValue);
+
             sdsExpenseChartData.SelectCommand =
                          "SELECT SUM(Amount) AS spentOn, MAX(E.OnDate) as onDate, E.Category FROM Expenses AS E WHERE DATEPART(yy, E.OnDate) = " + rcbYears.SelectedValue + " GROUP BY E.Category";
             RadChartExpenses.DataBind();
@@ -168,7 +181,7 @@ namespace Pages
             var tParents = Utility.TotalAmount(qForParents);
             var tGift = Utility.TotalAmount(qForGift);
             var tUtility = Utility.TotalAmount(qForUtility);
-            
+
             var totalExtra = tParents + tGift + tUtility;
 
             var builder = new StringBuilder("Total extra spent = ").Append(Utility.AmountToString(totalExtra));

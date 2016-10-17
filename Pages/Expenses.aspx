@@ -18,12 +18,14 @@
                     <telerik:AjaxUpdatedControl ControlID="rcbMonths" />
                     <telerik:AjaxUpdatedControl ControlID="lblExtraSpent"/>
                     <telerik:AjaxUpdatedControl ControlID="RadChartExpenses" LoadingPanelID="RadAjaxLoadingPanel1" />
+                     <telerik:AjaxUpdatedControl ControlID="RadGridExpenses" LoadingPanelID="RadAjaxLoadingPanel2"/>
                 </UpdatedControls>
             </telerik:AjaxSetting>
             <telerik:AjaxSetting AjaxControlID="rcbYears">
                 <UpdatedControls>
                     <telerik:AjaxUpdatedControl ControlID="lblExtraSpent"/>
                     <telerik:AjaxUpdatedControl ControlID="RadChartExpenses" LoadingPanelID="RadAjaxLoadingPanel1" />
+                    <telerik:AjaxUpdatedControl ControlID="RadGridExpenses" LoadingPanelID="RadAjaxLoadingPanel2"/>
                 </UpdatedControls>
             </telerik:AjaxSetting>
             <telerik:AjaxSetting AjaxControlID="rcbMonths">
@@ -34,6 +36,7 @@
         </AjaxSettings>
     </telerik:RadAjaxManager>
     <telerik:RadAjaxLoadingPanel ID="RadAjaxLoadingPanel1" runat="server" Skin="Office2010Blue" />
+    <telerik:RadAjaxLoadingPanel ID="RadAjaxLoadingPanel2" runat="server" Skin="Telerik" />
    <table>
         <tr>
             <td>
@@ -50,6 +53,7 @@
                 <telerik:RadComboBox ID="rcbYears" runat="server" AutoPostBack="true" Width="100px"
                     Skin="Office2010Blue" OnSelectedIndexChanged="RcbYears_SelectedIndexChanged">
                     <Items>
+                        <telerik:RadComboBoxItem Text="2016" Value="2016" />
 						<telerik:RadComboBoxItem Text="2015" Value="2015" />
 						<telerik:RadComboBoxItem Text="2014" Value="2014" />
                         <telerik:RadComboBoxItem Text="2013" Value="2013" />
@@ -85,7 +89,7 @@
         Width="1200px" Height="400px" AutoTextWrap="true" OnItemDataBound="RadChartExpenses_ItemDataBound"
         DataSourceID="sdsExpenseChartData" Skin="LightBlue">
         <ChartTitle>
-            <TextBlock Text="Expenses in year 2015" />
+            <TextBlock Text="Expenses in year 2016" />
         </ChartTitle>
         <Series>
             <telerik:ChartSeries Name="Items" Type="Pie" DataYColumn="Amount" Appearance-Border-Color="#b6e0f9">
@@ -115,7 +119,7 @@
         </MasterTableView>
     </telerik:RadGrid>
     <asp:SqlDataSource ID="sdsExpenseData" runat="server" ConnectionString="<%$ ConnectionStrings:sdfConString %>"
-        ProviderName="<%$ ConnectionStrings:sdfConString.ProviderName %>" SelectCommand="SELECT * FROM Expenses ORDER BY OnDate DESC" />
+        ProviderName="<%$ ConnectionStrings:sdfConString.ProviderName %>"/>
     <%--RADTOOLTIPMANAGER--%>
     <telerik:RadToolTipManager ID="RadToolTipManager1" runat="server" Skin="Telerik" Animation="Slide"
         Position="TopRight" AutoTooltipify="true" />

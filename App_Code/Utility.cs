@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Globalization;
-using Telerik.Charting.Styles;
 using Telerik.Web.UI;
+using Telerik.Charting.Styles;
 
 public class Utility
 {
@@ -25,6 +26,26 @@ public class Utility
             con.Close();
         }
         return result;
+    }
+
+    /// <summary>
+    /// Execute query and return data table.
+    /// </summary>
+    public static DataTable ExecuteQuery(string query)
+    {
+        var dataTable = new DataTable();
+
+        using (var con = new SqlCeConnection(ConnectionString))
+        {
+            using (var cmd = new SqlCeCommand(query, con))
+            {
+                con.Open();
+                var adapter = new SqlCeDataAdapter(cmd);
+                adapter.Fill(dataTable);
+            }
+        }
+
+        return dataTable;
     }
 
     /// <summary>
@@ -59,7 +80,7 @@ public class Utility
 	   Color.FromArgb(100,100,100),
 	   Color.FromArgb(80,70,60)
    };
-        int i = 0;
+        var i = 0;
         radChart.Series[0].Name = categoryName;
         foreach (var item in radChart.Series[0].Items)
         {

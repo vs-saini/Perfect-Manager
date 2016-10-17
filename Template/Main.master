@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Impeccable Manager - Management tool</title>
+    <title>Perfect Manager - Management tool</title>
     <link href="../Style/Main.css" rel="stylesheet" type="text/css" />
     <link href="../Style/favicon.ico" rel="Shortcut Icon" />
     <asp:ContentPlaceHolder ID="cphHead" runat="server">
@@ -13,13 +13,14 @@
     <form id="form1" runat="server">
     <telerik:RadScriptManager ID="RadScriptManager1" runat="server" />
     <div id="container">  
-<h2><span class="h2">Impeccable</span> Manager</h2>
+<h2>Perfect Manager <span class="h2"></span> </h2>
         <telerik:RadComboBox ID="RadComboBoxOptions" runat="server" AutoPostBack="true" Width="140px"
             Label="Track your:" Skin="Vista" OnSelectedIndexChanged="RadComboBoxOptions_SelectedIndexChanged">
             <Items>
                 <telerik:RadComboBoxItem Text="Expenses" Value="Expenses" Selected="true" />
                 <telerik:RadComboBoxItem Text="Earning" Value="Earning" />
-                <telerik:RadComboBoxItem Text="Potential Money" Value="Potential" />
+                <telerik:RadComboBoxItem Text="Finance" Value="Finance" />
+                <telerik:RadComboBoxItem Text="MutualFund" Value="MutualFund" />
             </Items>
         </telerik:RadComboBox>
         <br />

@@ -49,6 +49,7 @@ namespace Pages
 
         protected void RcbYears_SelectedIndexChanged(object sender, RadComboBoxSelectedIndexChangedEventArgs e)
         {
+            sdsEarningData.SelectCommand = string.Format("SELECT * FROM Earning WHERE DATEPART(yy, OnDate) = {0} ORDER BY OnDate DESC", rcbYears.SelectedValue);
             RadChartEarning.ChartTitle.TextBlock.Text = _chartTitle;
         }
 
@@ -84,13 +85,24 @@ namespace Pages
             if (!(e.Item is GridDataItem)) return;
 
             //Get the instance of the right type
-            var dataBoundItem = e.Item as GridDataItem;
+            var item = (GridDataItem)e.Item;
 
-            if (dataBoundItem["Salary_USD"].Text.Equals("&nbsp;"))
-                dataBoundItem["Salary_USD"].Text = "NA";
+            if (item["Salary_USD"].Text.Equals("&nbsp;"))
+                item["Salary_USD"].Text = "NA";
 
-            if (dataBoundItem["ER"].Text.Equals("&nbsp;"))
-                dataBoundItem["ER"].Text = "NA";
+            if (item["ER"].Text.Equals("&nbsp;"))
+            {
+                item["ER"].Text = "NA";
+            }
+            else
+            {
+                var er = Convert.ToDouble(item["ER"].Text);
+                item["ER"].Text = Utility.AmountToString(er);
+            }
+
+            // Set amount as per Indian currency
+            var amount = Convert.ToDouble(item["Amount"].Text);
+            item["Amount"].Text = Utility.AmountToString(amount);
         }
 
         #region Helpers
@@ -100,7 +112,8 @@ namespace Pages
         /// </summary>
         private void Initialize()
         {
-            var builder = new StringBuilder("Total Earning in Year ");
+            sdsEarningData.SelectCommand = string.Format("SELECT * FROM Earning WHERE DATEPART(yy, OnDate) = {0} ORDER BY OnDate DESC", rcbYears.SelectedValue);
+            var builder = new StringBuilder("Turnover in year ");
 
             // Get total of earning in INR
             var inrQuery = "SELECT SUM(Amount) FROM Earning WHERE DATEPART(yy, OnDate) = " + rcbYears.SelectedValue;
